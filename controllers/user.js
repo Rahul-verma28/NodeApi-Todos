@@ -8,7 +8,6 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select("+password");
-
     if (!user) return next(new ErrorHandler("Invalid Email or Password", 400));
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -35,7 +34,6 @@ export const register = async (req, res, next) => {
     user = await User.create({ name, email, password: hashedPassword });
 
     sendCookie(user, res, "Registered Successfully", 201);
-    console.log(req.cookie);
   } catch (error) {
     next(error);
   }
@@ -53,8 +51,8 @@ export const logout = (req, res) => {
     .status(200)
     .cookie("token", "", {
       expires: new Date(Date.now()),
-      sameSite: process.env.NODE_ENV === "Develpoment" ? "lax" : "none",
-      secure: process.env.NODE_ENV === "Develpoment" ? false : true,
+      sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
+      secure: process.env.NODE_ENV === "Development" ? false : true,
     })
     .json({
       success: true,

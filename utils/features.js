@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 
 export const sendCookie = (user, res, message, statusCode = 200) => {
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: '15m',
+  });
   res
     .status(statusCode)
     .cookie("token", token, {
@@ -14,4 +16,7 @@ export const sendCookie = (user, res, message, statusCode = 200) => {
       success: true,
       message,
     });
+
+  // Log the set-cookie header
+  // console.log('Set-Cookie Header:', res.get('Set-Cookie'));
 };
